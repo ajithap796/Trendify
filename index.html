@@ -327,6 +327,213 @@ select:focus {
   background-color: var(--bg-secondary);
 }
 
+/* ===================== Custom Date Picker ===================== */
+.datepicker {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.datepicker-input {
+  width: 100%;
+  padding: 0.625rem 2.5rem 0.625rem 0.875rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 0.925rem;
+  outline: none;
+  transition: var(--transition);
+  letter-spacing: 0.02em;
+}
+
+.datepicker-input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+  background-color: var(--bg-secondary);
+}
+
+.datepicker-input.invalid {
+  border-color: var(--err-border);
+  box-shadow: 0 0 0 3px var(--err-bg);
+}
+
+.datepicker-toggle {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  transition: var(--transition);
+}
+
+.datepicker-toggle:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.datepicker-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.datepicker-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 200;
+  width: 290px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 0.9rem;
+  display: none;
+}
+
+.datepicker-panel.open {
+  display: block;
+}
+
+.dp-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.dp-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dp-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.dp-nav {
+  background: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.dp-nav:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.dp-month-select,
+.dp-year-select {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.4rem;
+  cursor: pointer;
+}
+
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 0.25rem;
+}
+
+.dp-weekdays span {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 0.3rem 0;
+}
+
+.dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.dp-day {
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.dp-day:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.dp-day.muted {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+.dp-day.today {
+  box-shadow: inset 0 0 0 1px var(--accent-color);
+  font-weight: 700;
+}
+
+.dp-day.selected {
+  background-color: var(--accent-color);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.dp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.dp-link {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+}
+
+.dp-link:hover {
+  text-decoration: underline;
+}
+
 /* Alert Boxes (.warn, .ok, .err, .note) */
 .warn, .ok, .err, .note {
   padding: 0.875rem 1rem;
@@ -947,7 +1154,29 @@ button:disabled {
     </div>
     <div class="field">
       <label>Invoice Date</label>
-      <input type="date" id="invDate">
+      <div class="datepicker" id="invDatePicker">
+        <input type="text" id="invDateText" class="datepicker-input" placeholder="DD-MM-YYYY" autocomplete="off" inputmode="numeric" maxlength="10">
+        <button type="button" class="datepicker-toggle" id="invDateToggle" aria-label="Open calendar" title="Open calendar" tabindex="-1">📅</button>
+        <input type="hidden" id="invDate">
+        <div class="datepicker-panel" id="invDatePanel">
+          <div class="dp-panel-head">
+            <button type="button" class="dp-nav" id="dpPrevMonth" aria-label="Previous month">‹</button>
+            <div class="dp-title-group">
+              <select class="dp-month-select" id="dpMonthSelect"></select>
+              <select class="dp-year-select" id="dpYearSelect"></select>
+            </div>
+            <button type="button" class="dp-nav" id="dpNextMonth" aria-label="Next month">›</button>
+          </div>
+          <div class="dp-weekdays">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="dp-grid" id="dpGrid"></div>
+          <div class="dp-footer">
+            <button type="button" class="dp-link" id="dpClear">Clear</button>
+            <button type="button" class="dp-link" id="dpToday">Today</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="field">
       <label>Place of Supply</label>
@@ -1115,6 +1344,193 @@ button:disabled {
 </div><!-- /.app-layout -->
 
 <script>
+/* =========================================================================
+   CUSTOM DATE PICKER (typeable text input + friendly calendar dropdown)
+   Backs the hidden #invDate input (ISO yyyy-mm-dd) that the rest of the
+   app already reads via document.getElementById('invDate').value
+   ========================================================================= */
+const InvDatePicker = (function(){
+  const wrap      = document.getElementById('invDatePicker');
+  const textInput = document.getElementById('invDateText');
+  const hidden    = document.getElementById('invDate');
+  const toggleBtn = document.getElementById('invDateToggle');
+  const panel     = document.getElementById('invDatePanel');
+  const monthSel  = document.getElementById('dpMonthSelect');
+  const yearSel   = document.getElementById('dpYearSelect');
+  const prevBtn   = document.getElementById('dpPrevMonth');
+  const nextBtn   = document.getElementById('dpNextMonth');
+  const grid      = document.getElementById('dpGrid');
+  const clearBtn  = document.getElementById('dpClear');
+  const todayBtn  = document.getElementById('dpToday');
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  let viewYear, viewMonth; // 0-indexed month currently shown in the panel
+
+  function pad2(n){ return String(n).padStart(2, '0'); }
+
+  // yyyy-mm-dd  <->  dd-mm-yyyy
+  function isoToDMY(iso){
+    if (!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return `${d}-${m}-${y}`;
+  }
+  function dmyToISO(str){
+    const match = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec((str||'').trim());
+    if (!match) return null;
+    const d = parseInt(match[1],10), m = parseInt(match[2],10), y = parseInt(match[3],10);
+    if (m < 1 || m > 12) return null;
+    const daysInMonth = new Date(y, m, 0).getDate();
+    if (d < 1 || d > daysInMonth) return null;
+    return `${y}-${pad2(m)}-${pad2(d)}`;
+  }
+
+  function populateMonthYearSelects(){
+    monthSel.innerHTML = MONTHS.map((m,i) => `<option value="${i}">${m}</option>`).join('');
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let y = currentYear - 5; y <= currentYear + 5; y++) years.push(y);
+    yearSel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+  }
+
+  function renderCalendar(){
+    monthSel.value = viewMonth;
+    yearSel.value = viewYear;
+
+    const selectedISO = hidden.value || null;
+    const todayISO = new Date().toISOString().slice(0,10);
+
+    const firstOfMonth = new Date(viewYear, viewMonth, 1);
+    const startWeekday = firstOfMonth.getDay(); // 0 = Sunday
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+
+    const cells = [];
+    // leading days from previous month
+    for (let i = startWeekday - 1; i >= 0; i--){
+      cells.push({ day: daysInPrevMonth - i, muted: true, iso: null });
+    }
+    // days of this month
+    for (let d = 1; d <= daysInMonth; d++){
+      const iso = `${viewYear}-${pad2(viewMonth+1)}-${pad2(d)}`;
+      cells.push({ day: d, muted: false, iso });
+    }
+    // trailing days to complete the last week row
+    while (cells.length % 7 !== 0){
+      cells.push({ day: cells.length, muted: true, iso: null });
+    }
+
+    grid.innerHTML = cells.map(c => {
+      const classes = ['dp-day'];
+      if (c.muted) classes.push('muted');
+      if (c.iso && c.iso === todayISO) classes.push('today');
+      if (c.iso && c.iso === selectedISO) classes.push('selected');
+      const attr = c.iso ? `data-iso="${c.iso}"` : 'disabled';
+      return `<button type="button" class="${classes.join(' ')}" ${attr}>${c.day}</button>`;
+    }).join('');
+  }
+
+  function openPanel(){
+    const selectedISO = hidden.value;
+    const base = selectedISO ? new Date(selectedISO + 'T00:00:00') : new Date();
+    viewYear = base.getFullYear();
+    viewMonth = base.getMonth();
+    renderCalendar();
+    panel.classList.add('open');
+  }
+
+  function closePanel(){
+    panel.classList.remove('open');
+  }
+
+  function setISO(iso, opts){
+    opts = opts || {};
+    hidden.value = iso || '';
+    textInput.value = iso ? isoToDMY(iso) : '';
+    textInput.classList.remove('invalid');
+    if (!opts.silent){
+      hidden.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function setToday(){
+    const iso = new Date().toISOString().slice(0,10);
+    setISO(iso);
+  }
+
+  // ---- Wire up events ----
+  populateMonthYearSelects();
+
+  toggleBtn.addEventListener('click', () => {
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  });
+  textInput.addEventListener('focus', openPanel);
+
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) closePanel();
+  });
+
+  prevBtn.addEventListener('click', () => {
+    viewMonth--; if (viewMonth < 0){ viewMonth = 11; viewYear--; }
+    renderCalendar();
+  });
+  nextBtn.addEventListener('click', () => {
+    viewMonth++; if (viewMonth > 11){ viewMonth = 0; viewYear++; }
+    renderCalendar();
+  });
+  monthSel.addEventListener('change', () => { viewMonth = parseInt(monthSel.value,10); renderCalendar(); });
+  yearSel.addEventListener('change', () => { viewYear = parseInt(yearSel.value,10); renderCalendar(); });
+
+  grid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dp-day');
+    if (!btn || !btn.dataset.iso) return;
+    setISO(btn.dataset.iso);
+    closePanel();
+  });
+
+  clearBtn.addEventListener('click', () => { setISO(''); closePanel(); });
+  todayBtn.addEventListener('click', () => { setToday(); closePanel(); });
+
+  // Auto-insert dashes as the user types digits: 01082026 -> 01-08-2026
+  textInput.addEventListener('input', () => {
+    let digits = textInput.value.replace(/\D/g, '').slice(0, 8);
+    let formatted = digits;
+    if (digits.length > 4) formatted = `${digits.slice(0,2)}-${digits.slice(2,4)}-${digits.slice(4)}`;
+    else if (digits.length > 2) formatted = `${digits.slice(0,2)}-${digits.slice(2)}`;
+    textInput.value = formatted;
+    textInput.classList.remove('invalid');
+  });
+
+  // Validate & commit on blur or Enter
+  function commitTyped(){
+    const raw = textInput.value.trim();
+    if (raw === ''){ setISO(''); return; }
+    const iso = dmyToISO(raw);
+    if (iso){
+      setISO(iso);
+    } else {
+      textInput.classList.add('invalid');
+    }
+  }
+  textInput.addEventListener('blur', commitTyped);
+  textInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){ commitTyped(); closePanel(); }
+    else if (e.key === 'Escape'){ closePanel(); }
+    else if (e.key === 'Tab'){
+      // Close the panel *before* the browser resolves the next tabbable
+      // element, so Tab moves straight to the next form field instead of
+      // into the calendar's prev/next/month/year controls.
+      closePanel();
+    }
+    else if (e.key === 'ArrowDown' && !panel.classList.contains('open')){
+      e.preventDefault();
+      openPanel();
+    }
+  });
+
+  return { setToday, setISO, getISO: () => hidden.value };
+})();
+
 const BUYERS = {
   ARENA: {
     name: "BIMAL ARENA",
@@ -1429,7 +1845,7 @@ buyerSelect.addEventListener('change', e => applyBuyer(e.target.value));
 applyBuyer('ARENA');
 
 // default invoice date = today
-document.getElementById('invDate').valueAsDate = new Date();
+InvDatePicker.setToday();
 
 // ---------- File handling ----------
 const dropzone = document.getElementById('dropzone');
@@ -1987,7 +2403,7 @@ function resetApp(){
 
   const { max: resetMaxSerial, maxVoucher: resetMaxVoucher } = getMaxHistorySerial();
   document.getElementById('invNumber').value = resetMaxSerial > 0 ? incrementVoucher(resetMaxVoucher) : 'TRD/26-27/11';
-  document.getElementById('invDate').valueAsDate = new Date();
+  InvDatePicker.setToday();
   placeOfSupplySelect.value = '32 - Kerala';
   document.getElementById('hsnCode').value = '998538';
   document.getElementById('taxRate').value = '18';
