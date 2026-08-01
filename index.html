@@ -144,6 +144,18 @@ a:hover {
   padding: 1.25rem 0;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-light);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Spacer to offset the fixed topbar's height so content isn't hidden underneath it */
+.topbar-spacer {
+  height: var(--topbar-height, 92px);
+  margin-bottom: 2rem;
+  flex-shrink: 0;
 }
 
 .topbar-inner {
@@ -580,9 +592,9 @@ button:disabled {
   width: 240px;
   flex-shrink: 0;
   position: sticky;
-  top: 0;
+  top: var(--topbar-height, 92px);
   align-self: flex-start;
-  max-height: 100vh;
+  max-height: calc(100vh - var(--topbar-height, 92px));
   overflow-y: auto;
 }
 
@@ -822,6 +834,7 @@ button:disabled {
     <button type="button" class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
   </div>
 </div>
+<div class="topbar-spacer"></div>
 
 <div class="app-layout">
 <nav class="navtabs" id="navtabs">
@@ -2468,6 +2481,24 @@ buyerSelect.addEventListener('change', e => {
    ========================================================================= */
 renderDashboard();
 renderClientDirectory();
+
+// ---------- Keep the fixed topbar's height in sync with a CSS var ----------
+// The topbar can wrap to a taller layout on narrow screens, so its height
+// isn't a fixed constant. Measure it and expose it as --topbar-height so the
+// spacer div and the sticky sidebar always offset correctly.
+(function syncTopbarHeight() {
+  const topbarEl = document.querySelector('.topbar');
+  if (!topbarEl) return;
+  const setHeight = () => {
+    document.documentElement.style.setProperty('--topbar-height', topbarEl.offsetHeight + 'px');
+  };
+  setHeight();
+  window.addEventListener('resize', setHeight);
+  window.addEventListener('load', setHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(setHeight).observe(topbarEl);
+  }
+})();
 
 // ---------- PWA: register service worker ----------
 if ('serviceWorker' in navigator) {
