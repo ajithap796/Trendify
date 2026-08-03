@@ -828,7 +828,7 @@ button:disabled {
   flex-direction: column;
   gap: 0.15rem;
   padding: 1.25rem 0.75rem;
-  width: 240px;
+  width: 270px;
   flex-shrink: 0;
   position: sticky;
   top: var(--topbar-height, 92px);
@@ -850,15 +850,31 @@ button:disabled {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.875rem;
-  padding: 0.8rem 0.9rem;
+  padding: 0.8rem 1.1rem;
   cursor: pointer;
   white-space: nowrap;
   text-align: left;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   transition: var(--transition);
   width: 100%;
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
-  gap: 0.5rem;
+  gap: 0.6rem;
+}
+
+.navtab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.navtab-label {
+  line-height: 1.3;
 }
 
 .navtab:hover:not(.active) {
@@ -1077,11 +1093,11 @@ button:disabled {
 
 <div class="app-layout">
 <nav class="navtabs" id="navtabs">
-  <button type="button" class="navtab active" data-tab="dashboard">📊 Dashboard</button>
-  <button type="button" class="navtab" data-tab="invoice">🧾 Invoice Generator</button>
-  <button type="button" class="navtab" data-tab="sales">📈 Sales Summary &amp; Analytics</button>
-  <button type="button" class="navtab" data-tab="clients">👥 Client &amp; Service Directory</button>
-  <button type="button" class="navtab" data-tab="history">📜 Invoice History</button>
+  <button type="button" class="navtab active" data-tab="dashboard"><span class="navtab-icon">📊</span><span class="navtab-label">Dashboard</span></button>
+  <button type="button" class="navtab" data-tab="invoice"><span class="navtab-icon">🧾</span><span class="navtab-label">Invoice Generator</span></button>
+  <button type="button" class="navtab" data-tab="sales"><span class="navtab-icon">📈</span><span class="navtab-label">Sales Summary &amp; Analytics</span></button>
+  <button type="button" class="navtab" data-tab="clients"><span class="navtab-icon">👥</span><span class="navtab-label">Client &amp; Service Directory</span></button>
+  <button type="button" class="navtab" data-tab="history"><span class="navtab-icon">📜</span><span class="navtab-label">Invoice History</span></button>
 </nav>
 <main class="main-content">
 
