@@ -672,12 +672,44 @@ select:focus {
 }
 
 /* Bill History Table Formatting */
+.table-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+}
+
 #historyTable th, #historyTable td {
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 #historyTable td:nth-child(3) {
   white-space: normal;
+  min-width: 160px;
+}
+
+#historyTable td:last-child,
+#historyTable th:last-child {
+  text-align: right;
+}
+
+.history-delete-btn {
+  background: none;
+  border: 1px solid var(--err-border);
+  color: var(--err-text);
+  padding: 0.3rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.history-delete-btn:hover {
+  background-color: var(--err-bg);
 }
 
 /* Buttons & Actions */
@@ -1324,7 +1356,9 @@ button:disabled {
   </div>
   <div id="historyEmpty" class="note">No invoices generated yet on this device.</div>
   <div id="historyWrap" style="display:none;">
-    <table class="preview" id="historyTable"></table>
+    <div class="table-scroll">
+      <table class="preview" id="historyTable"></table>
+    </div>
     <div class="actions" style="margin-top:12px;">
       <button type="button" id="clearHistoryBtn" class="secondary-btn">Clear Bill History</button>
     </div>
@@ -1691,6 +1725,16 @@ function updateInvoiceStatus(invNumber, status){
   renderDashboard();
 }
 
+function deleteInvoice(invNumber){
+  let history = loadHistory();
+  history = history.filter(h => normVoucher(h.invNumber) !== normVoucher(invNumber));
+  saveHistory(history);
+  renderHistory();
+  renderDashboard();
+  renderSalesSummary();
+  renderClientDirectory();
+}
+
 function renderHistory(){
   const history = loadHistory();
   const empty = document.getElementById('historyEmpty');
@@ -1705,7 +1749,7 @@ function renderHistory(){
   empty.style.display = 'none';
   wrap.style.display = 'block';
 
-  let html = '<tr><th>Voucher No</th><th>Date</th><th>Buyer</th><th>Grand Total</th><th>Generated</th><th>Status</th><th>PDF</th></tr>';
+  let html = '<tr><th>Voucher No</th><th>Date</th><th>Buyer</th><th>Grand Total</th><th>Generated</th><th>Status</th><th>PDF</th><th>Delete</th></tr>';
   history.forEach(h => {
     const action = h.pdfDataUrl
       ? `<a href="${h.pdfDataUrl}" download="${h.fileName || 'invoice.pdf'}">⬇ Download</a>`
@@ -1716,7 +1760,8 @@ function renderHistory(){
         <option value="Paid" ${status==='Paid'?'selected':''}>Paid</option>
         <option value="Overdue" ${status==='Overdue'?'selected':''}>Overdue</option>
       </select>`;
-    html += `<tr><td>${h.invNumber}</td><td>${h.invDate}</td><td>${h.buyer}</td><td>${inr(h.total)}</td><td>${h.generatedAt}</td><td>${statusCell}</td><td>${action}</td></tr>`;
+    const deleteCell = `<button type="button" class="history-delete-btn" data-voucher="${h.invNumber.replace(/"/g,'&quot;')}" title="Delete this invoice from history">🗑 Delete</button>`;
+    html += `<tr><td>${h.invNumber}</td><td>${h.invDate}</td><td>${h.buyer}</td><td>${inr(h.total)}</td><td>${h.generatedAt}</td><td>${statusCell}</td><td>${action}</td><td>${deleteCell}</td></tr>`;
   });
   tbl.innerHTML = html;
 
@@ -1725,6 +1770,15 @@ function renderHistory(){
       const voucher = e.target.getAttribute('data-voucher');
       updateInvoiceStatus(voucher, e.target.value);
       e.target.className = 'status-select ' + statusBadgeClass(e.target.value);
+    });
+  });
+
+  tbl.querySelectorAll('.history-delete-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const voucher = e.currentTarget.getAttribute('data-voucher');
+      if (confirm(`Delete invoice "${voucher}" from Bill History? This only removes the record and its stored PDF copy on this device — it cannot be undone.`)){
+        deleteInvoice(voucher);
+      }
     });
   });
 }
